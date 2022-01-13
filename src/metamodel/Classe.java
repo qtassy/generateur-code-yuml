@@ -8,6 +8,7 @@ import generateur.Visiteur;
 
 public class Classe implements Visitable {
 
+	private String visibilite;	
 	private String nom;
 	private List<Propriete> proprietes;
 	private List<Methode> methodes;
@@ -17,12 +18,28 @@ public class Classe implements Visitable {
 		this.methodes = new ArrayList<Methode>();
 	}
 	
+	public List<Propriete> getProprietes() {
+		return proprietes;
+	}
+	
+	public List<Methode> getMethodes() {
+		return methodes;
+	}
+
 	public Classe(String nom) {
 		this.nom = nom;
 		this.proprietes = new ArrayList<Propriete>();
 		this.methodes = new ArrayList<Methode>();
 	}
 
+	public String getVisibilite() {
+		return visibilite;
+	}
+
+	public void setVisibilite(String visibilite) {
+		this.visibilite = visibilite;
+	}
+	
 	public String getNom() {
 		return nom;
 	}
@@ -61,6 +78,13 @@ public class Classe implements Visitable {
 				return false;
 			}
 		} else if (!this.methodes.equals(other.methodes)) {
+			return false;
+		}
+		if (this.visibilite == null) {
+			if (other.visibilite != null) {
+				return false;
+			}
+		} else if (!this.visibilite.equals(other.visibilite)) {
 			return false;
 		}
 		if (this.nom == null) {

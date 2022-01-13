@@ -23,6 +23,10 @@ public class Methode implements Visitable {
 		this.typeRetour = typeRetour;
 		this.visibilite = visibilite;
 	}
+	
+	public List<Parametre> getParametres() {
+		return parametres;
+	}
 
 	@Override
 	public void accept(Visiteur visiteur) {

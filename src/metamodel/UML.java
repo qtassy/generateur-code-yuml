@@ -8,19 +8,23 @@ import generateur.Visiteur;
 
 public class UML implements Visitable {
 
-	private List<Classe> classes;
+	private List<UnPackage> packages;
 	
 	public UML() {
-		this.classes = new ArrayList<Classe>();
+		this.packages = new ArrayList<UnPackage>();
 	}
 
+	public List<UnPackage> getPackages() {
+		return packages;
+	}
+	
 	@Override
 	public void accept(Visiteur visiteur) {		
 		visiteur.visitUML(this);
 	}
 	
-	public void add(Classe classe) {
-		this.classes.add(classe);
+	public void add(UnPackage unPackage) {
+		this.packages.add(unPackage);
 	}
 
 	@Override
@@ -37,11 +41,11 @@ public class UML implements Visitable {
 		
 		UML other = (UML) obj;
 		
-		if (this.classes == null) {
-			if (other.classes != null) {
+		if (this.packages == null) {
+			if (other.packages != null) {
 				return false;
 			}
-		} else if (!this.classes.equals(other.classes)) {
+		} else if (!this.packages.equals(other.packages)) {
 			return false;
 		}
 		return true;
