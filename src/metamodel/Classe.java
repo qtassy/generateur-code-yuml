@@ -10,6 +10,7 @@ public class Classe implements Visitable {
 
 	private String visibilite;	
 	private String nom;
+	private String nomPackage;
 	private List<Propriete> proprietes;
 	private List<Methode> methodes;
 
@@ -46,6 +47,14 @@ public class Classe implements Visitable {
 	
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+
+	public String getNomPackage() {
+		return nomPackage;
+	}
+
+	public void setNomPackage(String nomPackage) {
+		this.nomPackage = nomPackage;
 	}
 
 	@Override

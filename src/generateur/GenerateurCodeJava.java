@@ -17,7 +17,6 @@ import metamodel.Methode;
 import metamodel.Parametre;
 import metamodel.Propriete;
 import metamodel.UML;
-import metamodel.UnPackage;
 
 public class GenerateurCodeJava implements Visiteur {
 	String cheminDossier;
@@ -33,20 +32,14 @@ public class GenerateurCodeJava implements Visiteur {
 	@Override
 	public void visitUML(UML uml) {
 		this.classesPackages = new HashMap<String, Map<String, String>>();
-		
-		for(UnPackage unPackage : uml.getPackages()) {
-			this.codeClasse = "package " + unPackage.getNom() + ";\n\n";
-			unPackage.accept(this);
-			this.classesPackages.put(unPackage.getNom(), this.code);
-		}
-	}
-	
-	@Override
-	public void visitUnPackage(UnPackage unPackage) {
-		for(Classe classe : unPackage.getClasses()) {
-			this.code = new HashMap<String, String>();
-			classe.accept(this);
-			this.code.put(classe.getNom(), this.codeClasse);
+
+		for(Classe uneClasse : uml.getPackages()) {
+			this.codeClasse = "package " + uneClasse.getNomPackage() + ";\n\n";
+			uneClasse.accept(this);
+			if(!this.classesPackages.containsKey(uneClasse.getNomPackage())) {
+				this.classesPackages.put(uneClasse.getNomPackage(), new HashMap<String, String>());
+			}
+			this.classesPackages.get(uneClasse.getNomPackage()).put(uneClasse.getNom(), this.codeClasse);
 		}
 	}
 
@@ -56,7 +49,7 @@ public class GenerateurCodeJava implements Visiteur {
 			this.codeClasse += classe.getVisibilite() + " ";
 		}
 		
-		this.codeClasse += "class " + classe.getNom() + "{\n";
+		this.codeClasse += "class " + classe.getNom() + " {\n";
 		
 		for(Propriete propriete : classe.getProprietes()) {
 			propriete.accept(this);
@@ -90,9 +83,33 @@ public class GenerateurCodeJava implements Visiteur {
 				this.codeClasse += ", ";
 			}
 		}
+		String typeRetour = methode.getTypeRetour();
+		this.codeClasse += ") {\n\t\treturn";
 		
-		this.codeClasse += ") {\n\t\t";
-		this.codeClasse += "return null;\n\t}";
+		if(!"void".equals(typeRetour)) {
+			this.codeClasse += " ";
+			
+			if("int".equals(typeRetour) ||
+				"byte".equals(typeRetour) ||
+				"long".equals(typeRetour) ||
+				"short".equals(typeRetour) ||
+				"float".equals(typeRetour) ||
+				"double".equals(typeRetour)) {
+				// types numeriques
+				this.codeClasse += "0";
+			} else if("char".equals(typeRetour)) {
+				// Type caractere
+				this.codeClasse += "'a'";
+			}	else if("boolean".equals(typeRetour)) {
+				// Type  booleen
+				this.codeClasse += "true";
+			}  else {
+				// Type Objet
+				this.codeClasse += "null";
+			}
+		}
+		
+		this.codeClasse += ";\n\t}";
 	}
 
 	@Override
@@ -103,7 +120,7 @@ public class GenerateurCodeJava implements Visiteur {
 	
 	@Override
 	public String toString() {
-		return "";
+		return this.classesPackages.toString();
 	}
 	
 	public void toJavaFiles() throws Exception {
